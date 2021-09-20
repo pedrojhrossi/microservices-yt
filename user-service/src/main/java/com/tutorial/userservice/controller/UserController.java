@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -63,6 +65,32 @@ public class UserController {
 
         List<Bike> bikes = userService.getBikes(userId);
         return ResponseEntity.ok(bikes);
+    }
+
+    @PostMapping("/savecar/{userId}")
+    public ResponseEntity<Car> saveCar(@PathVariable("userId") int userId, @RequestBody Car car) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Car newCar = userService.saveCar(userId, car);
+        return ResponseEntity.ok(newCar);
+    }
+
+    @PostMapping("/savebike/{userId}")
+    public ResponseEntity<Bike> saveBike(@PathVariable("userId") int userId, @RequestBody Bike bike) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Bike newBike = userService.saveBike(userId, bike);
+        return ResponseEntity.ok(newBike);
+    }
+
+    @GetMapping("/getAll/{userId}")
+    public ResponseEntity<Map<String, Object>> getAllVehicles (@PathVariable("userId") int userId) {
+        Map<String, Object> result = userService.getUserAndVehicles(userId);
+        return ResponseEntity.ok(result);
     }
 
 }
